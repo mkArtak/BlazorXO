@@ -1,0 +1,33 @@
+@page "/xo"
+@using BlazorXO.Game.Engine;
+
+<button onclick="@ChangeCellType" style="width: @Width ; height: @Height ;">
+    @switch (CellType)
+    {
+        case BoardCellType.Empty:
+            break;
+
+        case BoardCellType.X:
+            <span>X</span>
+            break;
+
+        case BoardCellType.O:
+            <span>O</span>
+            break;
+    }
+</button>
+
+@functions {
+    [CascadingParameter] string Width { get; set; }
+    [CascadingParameter] string Height { get; set; }
+
+    [CascadingParameter] int PositionX { get; set; }
+    [CascadingParameter] int PositionY { get; set; }
+
+    [CascadingParameter] BoardCellType CellType { get; set; } = BoardCellType.Empty;
+
+    void ChangeCellType()
+    {
+
+    }
+}

@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+.vs
+/BlazorXO.Game/BlazorXO.Game/bin
+/BlazorXO.Game/BlazorXO.Game/obj
