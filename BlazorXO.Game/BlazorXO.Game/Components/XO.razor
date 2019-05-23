@@ -2,7 +2,7 @@
 @using BlazorXO.Game.Engine;
 
 <button onclick="@ChangeCellType" style="width: @Width ; height: @Height ;">
-    @switch (CellType)
+    @switch (Cell.CellType)
     {
         case BoardCellType.Empty:
             break;
@@ -18,16 +18,22 @@
 </button>
 
 @functions {
+    [Parameter] public EventCallback<BoardCell> CellClicked { get; private set; }
+
+    [CascadingParameter] BoardCell Cell { get; set; }
+
     [CascadingParameter] string Width { get; set; }
     [CascadingParameter] string Height { get; set; }
 
-    [CascadingParameter] int PositionX { get; set; }
-    [CascadingParameter] int PositionY { get; set; }
-
     [CascadingParameter] BoardCellType CellType { get; set; } = BoardCellType.Empty;
 
-    void ChangeCellType()
+    async Task ChangeCellType()
     {
+        if (this.CellType != BoardCellType.Empty)
+        {
+            return;
+        }
 
+        await this.CellClicked.InvokeAsync(Cell);
     }
 }

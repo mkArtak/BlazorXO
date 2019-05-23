@@ -1,7 +1,14 @@
 @page "/board"
 @using  BlazorXO.Game.Components;
+@using BlazorXO.Game.Engine;
+@inject XOEngine engine;
 
 <h1>Board</h1>
+
+
+<div style="background: red; visibility: @(ShowFinishBanner?"visible":"hidden"); ">
+    GAME HAS FINISHED
+</div>
 
 <div class="container">
     @for (int i = 0; i < 3; i++)
@@ -10,20 +17,23 @@
             @for (int j = 0; j < 3; j++)
             {
                 <div class="col-sm">
-                    <XO width="100%" height="100%" PositionX="@i" PositionY="@j" />
+                    <XO width="100%" height="100%" Cell="@engine.Map[i, j]" CellClicked="@XOClicked" />
                 </div>
             }
         </div>
     }
 </div>
 
-<p>Current count: @currentCount</p>
 
 @functions {
-    int currentCount = 0;
+    bool ShowFinishBanner { get; set; } = false;
 
-    void IncrementCount()
+    void XOClicked(BoardCell clickedCell)
     {
-        currentCount++;
+        MoveResult result = this.engine.Set(clickedCell.PositionX, clickedCell.PositionY);
+        if (result.IsGameFinished)
+        {
+            this.ShowFinishBanner = true;
+        }
     }
 }
