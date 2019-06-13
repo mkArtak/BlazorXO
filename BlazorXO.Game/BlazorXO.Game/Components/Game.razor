@@ -33,7 +33,7 @@
             return;
         }
 
-        MoveResult result = this.engine.Set(new MapPosition { I = clickedCell.PositionX, J = clickedCell.PositionY });
+        MoveResult result = this.engine.Set(clickedCell.Position);
         if (result.IsGameFinished)
         {
             this.ShowFinishBanner = true;

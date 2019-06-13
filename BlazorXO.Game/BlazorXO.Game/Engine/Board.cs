@@ -16,7 +16,7 @@
             {
                 for (int j = 0; j < this.Map.GetLength(1); j++)
                 {
-                    this.Map[i, j] = new BoardCell { PositionX = i, PositionY = j };
+                    this.Map[i, j] = new BoardCell { Position = new MapPosition(i, j) };
                 }
             }
         }

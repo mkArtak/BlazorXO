@@ -2,8 +2,14 @@
 {
     public struct MapPosition
     {
-        public int I { get; set; }
+        public int I { get; }
 
-        public int J { get; set; }
+        public int J { get; }
+
+        public MapPosition(int i, int j)
+        {
+            I = i;
+            J = j;
+        }
     }
 }

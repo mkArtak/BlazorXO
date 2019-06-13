@@ -2,9 +2,7 @@
 {
     public class BoardCell
     {
-        public int PositionX { get; set; }
-
-        public int PositionY { get; set; }
+        public MapPosition Position { get; set; }
 
         public BoardCellType CellType { get; set; } = BoardCellType.Empty;
 
