@@ -8,7 +8,6 @@
 
         public int BoardWidth { get => Map.GetLength(1); }
 
-
         public Board(GameOptions options)
         {
             this.Map = new BoardCell[options.BoardHeight, options.BoardWidth];

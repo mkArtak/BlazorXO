@@ -1,0 +1,42 @@
+@page "/game"
+@using BlazorXO.Game.Engine;
+@inject GameEngine engine;
+
+<h1>Board</h1>
+
+
+<div style="background: red; visibility: @(ShowFinishBanner?"visible":"hidden"); ">
+    GAME HAS FINISHED
+</div>
+
+<div class="container">
+    @for (int i = 0; i < 3; i++)
+    {
+        <div class="row" style="height: 50px;">
+            @for (int j = 0; j < 3; j++)
+            {
+                <div class="col-sm">
+                    <XO width="100%" height="100%" Cell="@engine.Board[i, j]" CellClicked="@XOClicked" />
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    bool ShowFinishBanner { get; set; } = false;
+
+    void XOClicked(BoardCell clickedCell)
+    {
+        if (this.engine.IsGameFinished)
+        {
+            return;
+        }
+
+        MoveResult result = this.engine.Set(new MapPosition { I = clickedCell.PositionX, J = clickedCell.PositionY });
+        if (result.IsGameFinished)
+        {
+            this.ShowFinishBanner = true;
+        }
+    }
+}

@@ -60,16 +60,11 @@ namespace BlazorXO.Game.Engine
                 J = pos.J - 1
             });
 
-        private Func<MapPosition, MapPosition> direction;
+        private readonly Func<MapPosition, MapPosition> direction;
 
         private MapNavigator(Func<MapPosition, MapPosition> directionFunction)
         {
-            if (directionFunction == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            this.direction = directionFunction;
+            this.direction = directionFunction ?? throw new ArgumentNullException();
         }
 
         public MapPosition Next(MapPosition position) => this.direction(position);

@@ -4,20 +4,22 @@ namespace BlazorXO.Game.Engine
 {
     internal class XOWinStrategy : ISolutionStrategy
     {
-        public int WinSequenceSize { get; }
+        private int WinSequenceSize { get; }
 
-        public XOWinStrategy(GameOptions options)
+        private Board GameBoard { get; }
+
+        public XOWinStrategy(GameOptions options, Board board)
         {
             this.WinSequenceSize = options.WinSequenceSize;
+            this.GameBoard = board;
         }
 
-        public bool TryGetWinPositions(Board board, BoardCellType cellType, MapPosition position, out IEnumerable<MapPosition> winPositions)
+        public bool TryGetWinPositions(BoardCellType cellType, MapPosition position, out IEnumerable<MapPosition> winPositions)
         {
-            if (TryGetWinPositionsOnDirections(board, cellType, position, MapNavigator.N, MapNavigator.S, out winPositions)
-                || TryGetWinPositionsOnDirections(board, cellType, position, MapNavigator.NE, MapNavigator.SW, out winPositions)
-                || TryGetWinPositionsOnDirections(board, cellType, position, MapNavigator.E, MapNavigator.W, out winPositions)
-                || TryGetWinPositionsOnDirections(board, cellType, position, MapNavigator.SE, MapNavigator.NW, out winPositions)
-                )
+            if (TryGetWinPositionsOnDirections(cellType, position, MapNavigator.N, MapNavigator.S, out winPositions)
+                || TryGetWinPositionsOnDirections(cellType, position, MapNavigator.NE, MapNavigator.SW, out winPositions)
+                || TryGetWinPositionsOnDirections(cellType, position, MapNavigator.E, MapNavigator.W, out winPositions)
+                || TryGetWinPositionsOnDirections(cellType, position, MapNavigator.SE, MapNavigator.NW, out winPositions))
             {
                 return true;
             }
@@ -25,13 +27,13 @@ namespace BlazorXO.Game.Engine
             return false;
         }
 
-        private bool TryGetWinPositionsOnDirections(Board board, BoardCellType value, MapPosition position, MapNavigator direction, MapNavigator oppositeDirection, out IEnumerable<MapPosition> winPositions)
+        private bool TryGetWinPositionsOnDirections(BoardCellType value, MapPosition position, MapNavigator direction, MapNavigator oppositeDirection, out IEnumerable<MapPosition> winPositions)
         {
             IList<MapPosition> potentialWinPositions = new List<MapPosition>();
             potentialWinPositions.Add(position);
 
-            GetMatchingPositionsOnDirection(board, value, position, direction, potentialWinPositions);
-            GetMatchingPositionsOnDirection(board, value, position, oppositeDirection, potentialWinPositions);
+            GetMatchingPositionsOnDirection(value, position, direction, potentialWinPositions);
+            GetMatchingPositionsOnDirection(value, position, oppositeDirection, potentialWinPositions);
 
             if (potentialWinPositions.Count >= this.WinSequenceSize)
             {
@@ -43,18 +45,18 @@ namespace BlazorXO.Game.Engine
             return false;
         }
 
-        private void GetMatchingPositionsOnDirection(Board board, BoardCellType cellType, MapPosition position, MapNavigator directionNavigator, IList<MapPosition> matchingPositions)
+        private void GetMatchingPositionsOnDirection(BoardCellType cellType, MapPosition position, MapNavigator directionNavigator, IList<MapPosition> matchingPositions)
         {
             MapPosition currentPosition = position;
             do
             {
                 currentPosition = directionNavigator.Next(currentPosition);
-                if (!board.IsPositionOnMap(currentPosition))
+                if (!this.GameBoard.IsPositionOnMap(currentPosition))
                 {
                     break;
                 }
 
-                if (board[currentPosition].CellType != cellType)
+                if (this.GameBoard[currentPosition].CellType != cellType)
                 {
                     break;
                 }

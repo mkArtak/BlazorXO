@@ -4,6 +4,6 @@ namespace BlazorXO.Game.Engine
 {
     public interface ISolutionStrategy
     {
-        bool TryGetWinPositions(Board board, BoardCellType cellType, MapPosition position, out IEnumerable<MapPosition> winPositions);
+        bool TryGetWinPositions(BoardCellType cellType, MapPosition position, out IEnumerable<MapPosition> winPositions);
     }
 }

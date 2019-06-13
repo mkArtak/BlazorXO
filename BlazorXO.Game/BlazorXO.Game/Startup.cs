@@ -17,9 +17,10 @@ namespace BlazorXO.Game
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
-            services.AddSingleton<GameOptions>();
-            services.AddSingleton<GameEngine>();
-            services.AddTransient<ISolutionStrategy, XOWinStrategy>();
+            services.AddScoped<GameOptions>();
+            services.AddScoped<Board>();
+            services.AddScoped<ISolutionStrategy, XOWinStrategy>();
+            services.AddScoped<GameEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,11 +14,11 @@
 
         public ISolutionStrategy SolutionStrategy { get; }
 
-        public GameEngine(GameOptions options, ISolutionStrategy strategy)
+        public GameEngine(GameOptions options, Board gameBoard, ISolutionStrategy strategy)
         {
             this.Options = options;
 
-            this.Board = new Board(options);
+            this.Board = gameBoard;
             this.SolutionStrategy = strategy;
         }
 
@@ -47,7 +47,7 @@
 
             MoveResult result = new MoveResult();
 
-            if (this.SolutionStrategy.TryGetWinPositions(this.Board, value, position, out var winPositions))
+            if (this.SolutionStrategy.TryGetWinPositions(value, position, out var winPositions))
             {
                 result.WinPositions = winPositions;
                 result.IsGameFinished = true;
