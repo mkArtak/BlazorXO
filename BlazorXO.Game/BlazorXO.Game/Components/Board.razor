@@ -1,7 +1,6 @@
 @page "/board"
-@using  BlazorXO.Game.Components;
 @using BlazorXO.Game.Engine;
-@inject XOEngine engine;
+@inject GameEngine engine;
 
 <h1>Board</h1>
 
@@ -23,7 +22,6 @@
         </div>
     }
 </div>
-
 
 @code {
     bool ShowFinishBanner { get; set; } = false;

@@ -18,7 +18,7 @@ namespace BlazorXO.Game
             services.AddSingleton<WeatherForecastService>();
 
             services.AddSingleton<GameOptions>();
-            services.AddSingleton<XOEngine>();
+            services.AddSingleton<GameEngine>();
             services.AddTransient<ISolutionStrategy, XOWinStrategy>();
         }
 
