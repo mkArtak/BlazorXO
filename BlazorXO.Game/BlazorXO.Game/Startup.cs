@@ -22,7 +22,9 @@ namespace BlazorXO.Game
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<XOEngine>(sp => new XOEngine(3, 3));
+
+            services.AddSingleton<GameOptions>();
+            services.AddSingleton<XOEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
