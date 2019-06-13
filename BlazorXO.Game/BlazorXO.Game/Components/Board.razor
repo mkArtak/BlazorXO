@@ -25,12 +25,17 @@
 </div>
 
 
-@functions {
+@code {
     bool ShowFinishBanner { get; set; } = false;
 
     void XOClicked(BoardCell clickedCell)
     {
-        MoveResult result = this.engine.Set(clickedCell.PositionX, clickedCell.PositionY);
+        if (this.engine.IsGameFinished)
+        {
+            return;
+        }
+
+        MoveResult result = this.engine.Set(new MapPosition { I = clickedCell.PositionX, J = clickedCell.PositionY });
         if (result.IsGameFinished)
         {
             this.ShowFinishBanner = true;

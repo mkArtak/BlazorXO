@@ -1,11 +1,13 @@
-﻿namespace BlazorXO.Game.Engine
+﻿using System.Collections.Generic;
+
+namespace BlazorXO.Game.Engine
 {
     public class MoveResult
     {
         public bool IsGameFinished { get; set; }
 
-        public bool HasWinner { get; set; }
+        public bool HasWinner { get => WinPositions != null; }
 
-        public int[][] WinPositions { get; set; }
+        public IEnumerable<MapPosition> WinPositions { get; set; }
     }
 }
