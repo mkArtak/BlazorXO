@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BlazorXO.Game.Engine
+﻿namespace BlazorXO.Game.Engine
 {
     public class XOEngine
     {
@@ -13,12 +11,14 @@ namespace BlazorXO.Game.Engine
         public GameOptions Options { get; }
 
         public Board Board { get; private set; }
+        public ISolutionStrategy SolutionStrategy { get; }
 
-        public XOEngine(GameOptions options)
+        public XOEngine(GameOptions options, ISolutionStrategy strategy)
         {
             this.Options = options;
 
             this.Board = new Board(options);
+            this.SolutionStrategy = strategy;
         }
 
         public MoveResult Set(MapPosition position)
@@ -46,7 +46,7 @@ namespace BlazorXO.Game.Engine
 
             MoveResult result = new MoveResult();
 
-            if (TryGetWinPositions(value, position, out var winPositions))
+            if (this.SolutionStrategy.TryGetWinPositions(this.Board, value, position, out var winPositions))
             {
                 result.WinPositions = winPositions;
                 result.IsGameFinished = true;
@@ -69,58 +69,6 @@ namespace BlazorXO.Game.Engine
             }
 
             return result;
-        }
-
-        private bool TryGetWinPositions(BoardCellType value, MapPosition position, out IEnumerable<MapPosition> winPositions)
-        {
-            if (TryGetWinPositionsOnDirections(value, position, MapNavigator.N, MapNavigator.S, out winPositions)
-                || TryGetWinPositionsOnDirections(value, position, MapNavigator.NE, MapNavigator.SW, out winPositions)
-                || TryGetWinPositionsOnDirections(value, position, MapNavigator.E, MapNavigator.W, out winPositions)
-                || TryGetWinPositionsOnDirections(value, position, MapNavigator.SE, MapNavigator.NW, out winPositions)
-                )
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool TryGetWinPositionsOnDirections(BoardCellType value, MapPosition position, MapNavigator direction, MapNavigator oppositeDirection, out IEnumerable<MapPosition> winPositions)
-        {
-            IList<MapPosition> potentialWinPositions = new List<MapPosition>();
-            potentialWinPositions.Add(position);
-
-            GetMatchingPositionsOnDirection(value, position, direction, potentialWinPositions);
-            GetMatchingPositionsOnDirection(value, position, oppositeDirection, potentialWinPositions);
-
-            if (potentialWinPositions.Count >= this.Options.WinSequenceSize)
-            {
-                winPositions = potentialWinPositions;
-                return true;
-            }
-
-            winPositions = null;
-            return false;
-        }
-
-        private void GetMatchingPositionsOnDirection(BoardCellType cellType, MapPosition position, MapNavigator directionNavigator, IList<MapPosition> matchingPositions)
-        {
-            MapPosition currentPosition = position;
-            do
-            {
-                currentPosition = directionNavigator.Next(currentPosition);
-                if (!this.Board.IsPositionOnMap(currentPosition))
-                {
-                    break;
-                }
-
-                if (this.Board[currentPosition].CellType != cellType)
-                {
-                    break;
-                }
-
-                matchingPositions.Add(currentPosition);
-            } while (true);
         }
     }
 }
