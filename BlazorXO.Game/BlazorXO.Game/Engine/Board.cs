@@ -4,13 +4,15 @@
     {
         private BoardCell[,] Map { get; set; }
 
-        public int BoardHeigth { get => Map.GetLength(0); }
+        public int BoardHeigth { get; }
 
-        public int BoardWidth { get => Map.GetLength(1); }
+        public int BoardWidth { get; }
 
         public Board(GameOptions options)
         {
             this.Map = new BoardCell[options.BoardHeight, options.BoardWidth];
+            this.BoardHeigth = options.BoardHeight;
+            this.BoardWidth = options.BoardWidth;
 
             for (int i = 0; i < this.Map.GetLength(0); i++)
             {
@@ -33,9 +35,9 @@
 
         public bool IsBoardFull()
         {
-            for (int x = 0; x < Map.GetLength(0); x++)
+            for (int x = 0; x < this.BoardHeigth; x++)
             {
-                for (int y = 0; y < Map.GetLength(1); y++)
+                for (int y = 0; y < this.BoardWidth; y++)
                 {
                     if (Map[x, y].CellType == BoardCellType.Empty)
                     {
@@ -49,8 +51,8 @@
 
         public bool IsPositionOnMap(MapPosition currentPosition)
         {
-            if (currentPosition.I < 0 || currentPosition.I >= this.Map.GetLength(0)
-                || currentPosition.J < 0 || currentPosition.J >= this.Map.GetLength(1))
+            if (currentPosition.I < 0 || currentPosition.I >= this.BoardHeigth
+                || currentPosition.J < 0 || currentPosition.J >= this.BoardWidth)
             {
                 return false;
             }
