@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorXO.Game.Engine
 {
@@ -7,35 +6,19 @@ namespace BlazorXO.Game.Engine
     {
         private bool isXTurn = true;
 
-        public BoardCell[,] Map { get; private set; }
-
         public bool IsGameFinished { get; private set; } = false;
-
-        public int BoardHeigth { get => Map.GetLength(0); }
-
-        public int BoardWidth { get => Map.GetLength(1); }
 
         public BoardCellType CurrentTurn { get => isXTurn ? BoardCellType.X : BoardCellType.O; }
 
         public GameOptions Options { get; }
 
+        public Board Board { get; private set; }
+
         public XOEngine(GameOptions options)
         {
             this.Options = options;
 
-            this.Initialize();
-        }
-
-        public void Initialize()
-        {
-            this.Map = new BoardCell[this.Options.BoardHeight, this.Options.BoardWidth];
-            for (int i = 0; i < this.Map.GetLength(0); i++)
-            {
-                for (int j = 0; j < this.Map.GetLength(1); j++)
-                {
-                    this.Map[i, j] = new BoardCell { PositionX = i, PositionY = j };
-                }
-            }
+            this.Board = new Board(options);
         }
 
         public MoveResult Set(MapPosition position)
@@ -45,7 +28,7 @@ namespace BlazorXO.Game.Engine
                 throw new InvalidMoveException("Game is finished. No more moves are allowed.");
             }
 
-            if (Map[position.I, position.J].CellType != BoardCellType.Empty)
+            if (this.Board[position].CellType != BoardCellType.Empty)
             {
                 throw new InvalidMoveException("Cell is used");
             }
@@ -59,7 +42,7 @@ namespace BlazorXO.Game.Engine
 
         private MoveResult UpdateCellState(MapPosition position, BoardCellType value)
         {
-            Map[position.I, position.J].CellType = value;
+            this.Board[position].CellType = value;
 
             MoveResult result = new MoveResult();
 
@@ -71,7 +54,7 @@ namespace BlazorXO.Game.Engine
 
             if (!result.HasWinner)
             {
-                bool isBoardFull = IsBoardFull();
+                bool isBoardFull = this.Board.IsBoardFull();
                 if (isBoardFull)
                 {
                     result.IsGameFinished = true;
@@ -81,7 +64,7 @@ namespace BlazorXO.Game.Engine
             {
                 foreach (var winPosition in winPositions)
                 {
-                    Map[winPosition.I, winPosition.J].IsHighlighted = true;
+                    this.Board[winPosition].IsHighlighted = true;
                 }
             }
 
@@ -126,45 +109,18 @@ namespace BlazorXO.Game.Engine
             do
             {
                 currentPosition = directionNavigator.Next(currentPosition);
-                if (!IsPositionOnMap(currentPosition))
+                if (!this.Board.IsPositionOnMap(currentPosition))
                 {
                     break;
                 }
 
-                if (this.Map[currentPosition.I, currentPosition.J].CellType != cellType)
+                if (this.Board[currentPosition].CellType != cellType)
                 {
                     break;
                 }
 
                 matchingPositions.Add(currentPosition);
             } while (true);
-        }
-
-        private bool IsPositionOnMap(MapPosition currentPosition)
-        {
-            if (currentPosition.I < 0 || currentPosition.I >= this.Map.GetLength(0)
-                || currentPosition.J < 0 || currentPosition.J >= this.Map.GetLength(1))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsBoardFull()
-        {
-            for (int x = 0; x < Map.GetLength(0); x++)
-            {
-                for (int y = 0; y < Map.GetLength(1); y++)
-                {
-                    if (Map[x, y].CellType == BoardCellType.Empty)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
         }
     }
 }
